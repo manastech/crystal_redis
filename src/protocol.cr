@@ -5,14 +5,14 @@ module Redis
     extend self
 
     def read(io)
-      case io.read_byte
-      when '+'.ord
+      case io.read_byte.try &.chr
+      when '+'
         read_string(io)
-      when '-'.ord
+      when '-'
         raise CommandError.new read_string(io)
-      when ':'.ord
+      when ':'
         read_number(io)
-      when '$'.ord
+      when '$'
         length = read_number(io)
         return nil if length == -1
 
@@ -20,7 +20,7 @@ module Redis
         io.read_byte # \r
         io.read_byte # \n
         value
-      when '*'.ord
+      when '*'
         length = read_number(io)
         return nil if length == -1
 
@@ -58,21 +58,21 @@ module Redis
     private def read_number(io)
       length = 0_i64
       negative = false
-      byte = io.read_byte.not_nil!
-      if byte == '-'.ord
+      char = read_char(io)
+      if char == '-'
         negative = true
-        byte = io.read_byte.not_nil!
+        char = read_char(io)
       end
-      while true
-        if '0'.ord <= byte < '9'.ord
-          length = length * 10 + (byte - '0'.ord)
-        else
-          break
-        end
-        byte = io.read_byte.not_nil!
+      while char.digit?
+        length = length * 10 + (char - '0')
+        char = read_char(io)
       end
       io.read_byte # \n
       negative ? -length : length
+    end
+
+    private def read_char(io)
+      io.read_byte.not_nil!.chr
     end
   end
 end
