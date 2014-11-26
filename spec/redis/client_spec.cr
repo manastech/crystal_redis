@@ -1,16 +1,31 @@
 require "../spec_helper"
 
 describe Redis::Client do
-  it "sets and gets" do
+  it "set and get" do
     client = Redis::Client.new
     client.set("foo", "bar").should eq("OK")
     client.get("foo").should eq("bar")
   end
 
-  it "removes a key" do
+  it "del one key" do
     client = Redis::Client.new
     client.set("foo", "bar").should eq("OK")
     client.del("foo").should eq(1)
     client.get("foo").should be_nil
+  end
+
+  it "del many keys" do
+    client = Redis::Client.new
+    client.set("foo", "bar").should eq("OK")
+    client.set("baz", "qux").should eq("OK")
+    client.del("foo", "baz").should eq(2)
+  end
+
+  it "exists" do
+    client = Redis::Client.new
+    client.set("foo", "bar").should eq("OK")
+    client.exists("foo").should be_true
+    client.del("foo")
+    client.exists("foo").should be_false
   end
 end

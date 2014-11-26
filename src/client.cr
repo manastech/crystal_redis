@@ -7,8 +7,12 @@ class Redis::Client
     @io = BufferedIO.new TCPSocket.new host, port
   end
 
-  def del(key)
-    command "DEL", key
+  def del(*keys)
+    command "DEL", *keys
+  end
+
+  def exists(key)
+    command("EXISTS", key) == 1
   end
 
   def get(key)
