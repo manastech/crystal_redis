@@ -24,11 +24,7 @@ module Redis
         length = read_number(io)
         return nil if length == -1
 
-        values = Array(ResponseType).new(length)
-        length.times do
-          values << read(io)
-        end
-        values
+        Array.new(length.to_i32) { read(io) as ResponseType }
       else
         nil
       end

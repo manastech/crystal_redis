@@ -25,7 +25,7 @@ describe Redis::Protocol do
     it_reads "*5\r\n:1\r\n:2\r\n:3\r\n:4\r\n$6\r\nfoobar\r\n", [1, 2, 3, 4, "foobar"]
     it_reads "*3\r\n$3\r\nfoo\r\n$-1\r\n$3\r\nbar\r\n", ["foo", nil, "bar"]
 
-    it "raises on error" do
+    it "raises CommandError on error" do
       expect_raises Redis::CommandError, "OH NO!" do
         Redis::Protocol.read(StringIO.new("-OH NO!"))
       end
