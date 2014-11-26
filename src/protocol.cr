@@ -65,12 +65,11 @@ module Redis
 
     private def read_number(io)
       length = 0_i64
+      negative = false
       byte = io.read_byte.not_nil!
       if byte == '-'.ord
-        io.read_byte # 1
-        io.read_byte # \r
-        io.read_byte # \n
-        return -1_i64
+        negative = true
+        byte = io.read_byte.not_nil!
       end
       while true
         if '0'.ord <= byte < '9'.ord
@@ -81,7 +80,7 @@ module Redis
         byte = io.read_byte.not_nil!
       end
       io.read_byte # \n
-      length
+      negative ? -length : length
     end
   end
 end

@@ -28,4 +28,15 @@ describe Redis::Client do
     client.del("foo")
     client.exists("foo").should be_false
   end
+
+  it "incr and decr" do
+    client = Redis::Client.new
+    client.del("foo")
+    client.incr("foo").should eq(1)
+    client.incr("foo").should eq(2)
+    client.decr("foo").should eq(1)
+    client.decr("foo").should eq(0)
+    client.decr("foo").should eq(-1)
+    client.decr("foo").should eq(-2)
+  end
 end

@@ -12,18 +12,38 @@ class Redis::Client
   end
 
   def exists(key)
-    command("EXISTS", key) == 1
+    bool "EXISTS", key
   end
 
   def get(key)
-    (command "GET", key) as String?
+    string? "GET", key
+  end
+
+  def incr(key)
+    int "INCR", key
+  end
+
+  def decr(key)
+    int "DECR", key
   end
 
   def set(key, value)
     command "SET", key, value
   end
 
-  def command(name, *args)
+  private def bool(name, *args)
+    command(name, *args) == 1
+  end
+
+  private def int(name, *args)
+    command(name, *args) as Int64
+  end
+
+  private def string?(name, *args)
+    command(name, *args) as String?
+  end
+
+  private def command(name, *args)
     array(args.length + 1, @io) do
       write name, @io
       args.each do |arg|
