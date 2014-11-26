@@ -35,27 +35,19 @@ module Redis
     end
 
     def write(value : Nil, io)
-      io.print "$-1\r\n"
+      io << "$-1\r\n"
     end
 
     def write(value : Int, io)
-      io.print ':'
-      io.print value
-      io.print "\r\n"
+      io << ':' << value << "\r\n"
     end
 
     def write(value : String, io)
-      io.print '$'
-      io.print value.bytesize
-      io.print "\r\n"
-      io.print value
-      io.print "\r\n"
+      io << '$' << value.bytesize << "\r\n" << value << "\r\n"
     end
 
     def array(length, io)
-      io.print '*'
-      io.print length
-      io.print "\r\n"
+      io << '*' << length << "\r\n"
       yield
     end
 

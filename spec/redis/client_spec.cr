@@ -7,6 +7,14 @@ describe Redis::Client do
     client.get("foo").should eq("bar")
   end
 
+  it "set and get with []" do
+    client = Redis::Client.new
+    client["foo"] = "bar"
+    client["foo"].should eq("bar")
+    client.del("foo")
+    client["foo"]?.should be_nil
+  end
+
   it "del one key" do
     client = Redis::Client.new
     client.set("foo", "bar").should eq("OK")

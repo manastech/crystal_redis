@@ -31,12 +31,28 @@ class Redis::Client
     command "SET", key, value
   end
 
+  def [](key)
+    string "GET", key
+  end
+
+  def []?(key)
+    get key
+  end
+
+  def []=(key, value)
+    set key, value
+  end
+
   private def bool(name, *args)
     command(name, *args) == 1
   end
 
   private def int(name, *args)
     command(name, *args) as Int64
+  end
+
+  private def string(name, *args)
+    command(name, *args) as String
   end
 
   private def string?(name, *args)
