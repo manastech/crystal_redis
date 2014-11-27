@@ -3,8 +3,22 @@ require "./protocol"
 class Redis::Client
   include Protocol
 
-  def initialize(host = "127.0.0.1", port = 6379)
-    @io = BufferedIO.new TCPSocket.new host, port
+  def initialize(host = DEFAULT_HOST, port = DEFAULT_PORT)
+    @socket = TCPSocket.new host, port
+    @io = BufferedIO.new @socket
+  end
+
+  def self.open(host = DEFAULT_HOST, port = DEFAULT_PORT)
+    client = new(host, port)
+    begin
+      yield client
+    ensure
+      client.disconnect
+    end
+  end
+
+  def disconnect
+    @socket.close
   end
 
   def del(*keys)
