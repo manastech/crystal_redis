@@ -2,14 +2,14 @@ require "../spec_helper"
 
 describe Redis::Client do
   it "set and get" do
-    Redis::Client.open do |client|
+    Redis.open do |client|
       client.set("foo", "bar").should eq("OK")
       client.get("foo").should eq("bar")
     end
   end
 
   it "set and get with []" do
-    Redis::Client.open do |client|
+    Redis.open do |client|
       client["foo"] = "bar"
       client["foo"].should eq("bar")
       client.del("foo")
@@ -18,7 +18,7 @@ describe Redis::Client do
   end
 
   it "set and get number" do
-    Redis::Client.open do |client|
+    Redis.open do |client|
       client.set("foo", 1).should eq("OK")
       client.get("foo").should eq("1")
       client.set(1, 2).should eq("OK")
@@ -27,7 +27,7 @@ describe Redis::Client do
   end
 
   it "del one key" do
-    Redis::Client.open do |client|
+    Redis.open do |client|
       client.set("foo", "bar").should eq("OK")
       client.del("foo").should eq(1)
       client.get("foo").should be_nil
@@ -35,7 +35,7 @@ describe Redis::Client do
   end
 
   it "del many keys" do
-    Redis::Client.open do |client|
+    Redis.open do |client|
       client.set("foo", "bar").should eq("OK")
       client.set("baz", "qux").should eq("OK")
       client.del("foo", "baz").should eq(2)
@@ -43,7 +43,7 @@ describe Redis::Client do
   end
 
   it "del one numeric key" do
-    Redis::Client.open do |client|
+    Redis.open do |client|
       client.set(1, "bar").should eq("OK")
       client.del(1).should eq(1)
       client.get(1).should be_nil
@@ -51,7 +51,7 @@ describe Redis::Client do
   end
 
   it "exists" do
-    Redis::Client.open do |client|
+    Redis.open do |client|
       client.set("foo", "bar").should eq("OK")
       client.exists("foo").should be_true
       client.del("foo")
@@ -60,7 +60,7 @@ describe Redis::Client do
   end
 
   it "incr and decr" do
-    Redis::Client.open do |client|
+    Redis.open do |client|
       client.del("foo")
       client.incr("foo").should eq(1)
       client.incr("foo").should eq(2)
