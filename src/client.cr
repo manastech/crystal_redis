@@ -7,7 +7,6 @@ class Redis::Client
     host ||= DEFAULT_HOST
     port ||= DEFAULT_PORT
     @socket = TCPSocket.new host, port
-    @io = BufferedIO.new @socket
   end
 
   def self.open(host = nil, port = nil)
@@ -80,14 +79,14 @@ class Redis::Client
   end
 
   private def command(name, *args)
-    array(args.length + 1, @io) do
-      write name, @io
+    array(args.length + 1, @socket) do
+      write name, @socket
       args.each do |arg|
-        write yield(arg), @io
+        write yield(arg), @socket
       end
     end
-    @io.flush
+    @socket.flush
 
-    read @io
+    read @socket
   end
 end
