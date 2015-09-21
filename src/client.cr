@@ -79,7 +79,7 @@ class Redis::Client
   end
 
   private def command(name, *args)
-    array(args.length + 1, @socket) do
+    array(args.size + 1, @socket) do
       write name, @socket
       args.each do |arg|
         write yield(arg), @socket
