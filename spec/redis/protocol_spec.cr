@@ -2,7 +2,7 @@ require "../spec_helper"
 
 def it_reads(string, expected, file = __FILE__, line = __LINE__)
   it "reads #{string}", file, line do
-    Redis::Protocol.read(StringIO.new(string)).should eq(expected)
+    Redis::Protocol.read(MemoryIO.new(string)).should eq(expected)
   end
 end
 
@@ -27,32 +27,32 @@ describe Redis::Protocol do
 
     it "raises CommandError on error" do
       expect_raises Redis::CommandError, "OH NO!" do
-        Redis::Protocol.read(StringIO.new("-OH NO!"))
+        Redis::Protocol.read(MemoryIO.new("-OH NO!"))
       end
     end
   end
 
   describe "write" do
     it "writes nil" do
-      io = StringIO.new
+      io = MemoryIO.new
       Redis::Protocol.write(nil, io)
       io.to_s.should eq("$-1\r\n")
     end
 
     it "writes bulk string" do
-      io = StringIO.new
+      io = MemoryIO.new
       Redis::Protocol.write("hello", io)
       io.to_s.should eq("$5\r\nhello\r\n")
     end
 
     it "writes integer" do
-      io = StringIO.new
+      io = MemoryIO.new
       Redis::Protocol.write(1234, io)
       io.to_s.should eq(":1234\r\n")
     end
 
     it "writes array" do
-      io = StringIO.new
+      io = MemoryIO.new
       Redis::Protocol.array(5, io) do
         Redis::Protocol.write(1, io)
         Redis::Protocol.write(2, io)

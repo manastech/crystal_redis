@@ -13,10 +13,13 @@ module Redis
       when ':'
         read_number(io)
       when '$'
-        length = read_number(io)
+        length = read_number(io).to_i32
         return nil if length == -1
 
-        value = io.read(length.to_i32)
+        value = String.new(length) do |buffer|
+                  io.read_fully(Slice.new(buffer, length))
+                  {length, 0}
+                end
         io.read_byte # \r
         io.read_byte # \n
         value
