@@ -63,15 +63,15 @@ class Redis::Client
   end
 
   private def int(name, *args)
-    command(name, *args) as Int64
+    command(name, *args).as Int64
   end
 
   private def string(name, *args)
-    command(name, *args) as String
+    command(name, *args).as String
   end
 
   private def string?(name, *args)
-    command(name, *args) as String?
+    command(name, *args).as String?
   end
 
   private def command(name, *args)

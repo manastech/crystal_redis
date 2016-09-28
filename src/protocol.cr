@@ -17,9 +17,9 @@ module Redis
         return nil if length == -1
 
         value = String.new(length) do |buffer|
-                  io.read_fully(Slice.new(buffer, length))
-                  {length, 0}
-                end
+          io.read_fully(Slice.new(buffer, length))
+          {length, 0}
+        end
         io.read_byte # \r
         io.read_byte # \n
         value
@@ -27,7 +27,7 @@ module Redis
         length = read_number(io)
         return nil if length == -1
 
-        Array.new(length.to_i32) { read(io) as ResponseType }
+        Array.new(length.to_i32) { read(io).as ResponseType }
       else
         nil
       end
