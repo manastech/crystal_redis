@@ -62,7 +62,7 @@ module Redis
         negative = true
         char = read_char(io)
       end
-      while char.digit?
+      while char.ascii_number?
         length = length * 10 + (char - '0')
         char = read_char(io)
       end
