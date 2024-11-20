@@ -4,6 +4,8 @@
 > 
 > The contents are still available readonly and continue to work as a
 > [shards](https://github.com/crystal-lang/shards/) dependency.
+> 
+> We recommend switching to https://github.com/stefanwille/crystal-redis instead.
 >
 > If you wish to continue development yourself, we recommend you fork it.
 > We can also arrange to transfer ownership.
